@@ -1,0 +1,56 @@
+{
+	"name": "cmd-mod-jev-nudge",
+	"version": "0.1.0",
+	"description": "Command Code mod: nudges the agent to keep going when it stops with work left, judged by Jev",
+	"keywords": [
+		"command-code",
+		"commandcode",
+		"cmd",
+		"mod",
+		"jev",
+		"typesafe",
+		"stop-hook",
+		"agent"
+	],
+	"license": "MIT",
+	"author": "Ahmad Awais <me@ahmadawais.com>",
+	"homepage": "https://github.com/CommandCodeAI/cmd-mod-jev-nudge#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CommandCodeAI/cmd-mod-jev-nudge.git"
+	},
+	"bugs": "https://github.com/CommandCodeAI/cmd-mod-jev-nudge/issues",
+	"type": "module",
+	"commandcode": {
+		"mods": [
+			"./src/index.ts"
+		]
+	},
+	"files": [
+		"src",
+		"!src/__tests__",
+		"README.md"
+	],
+	"engines": {
+		"node": ">=20"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"prepublishOnly": "pnpm typecheck && pnpm test"
+	},
+	"dependencies": {
+		"zod": "^4.1.5"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.0",
+		"@types/node": "^22.0.0",
+		"typescript": "^5.9.2",
+		"vitest": "^4.1.11"
+	}
+}
