@@ -2,6 +2,8 @@
 
 https://github.com/user-attachments/assets/c2265d14-2012-46e2-94fb-f7b1174c00e9
 
+[Demo video on 𝕏](https://x.com/MrAhmadAwais/status/2102456912486989945)
+
 Agents stop too early. They do one step, say "next I'll do X", and hand the prompt back.
 
 This [Command Code](https://commandcode.ai) mod asks [Jev](https://typesafe.ai) at every stop:
