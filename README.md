@@ -72,17 +72,13 @@ cmd --mod .       # loads this mod for one session
 This prompt forces early stops on purpose:
 
 ```
-Five steps: (1) create smoke-1-ignite.txt containing ignite, (2) create smoke-2-kindle.txt
-containing kindle, (3) create smoke-3-blaze.txt containing blaze, (4) create smoke-4-ember.txt
-containing ember, (5) create smoke-5-ash.txt containing ash. Ignore any other files in the folder.
-Rule for this exercise: do exactly ONE step per reply, then end your reply with a short status
-line saying which steps remain. When all five files exist, say "all five files are done".
+make smoke-1-ignite.txt … smoke-5-ash.txt (kindle, blaze, ember between), each file holds its word. ONE file per reply, then stop and say what's left. ignore other files. all 5 exist → say "all five files are done".
 ```
 
 One prompt, five replies. You type once. Percentages vary run to run.
 
 ```
-you   ▸ Five steps: (1) create smoke-1-ignite.txt ...
+you   ▸ make smoke-1-ignite.txt … smoke-5-ash.txt ...
 
 agent ▸ write smoke-1-ignite.txt
         Created smoke-1-ignite.txt. Remaining: 2, 3, 4, 5.
