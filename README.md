@@ -1,6 +1,6 @@
 # cmd-mod-jev-nudge
 
-https://github.com/user-attachments/assets/5f48830b-d364-4f42-adef-4fdd62d46ad3
+https://github.com/user-attachments/assets/c2265d14-2012-46e2-94fb-f7b1174c00e9
 
 Agents stop too early. They do one step, say "next I'll do X", and hand the prompt back.
 
