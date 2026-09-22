@@ -1,7 +1,7 @@
 // Local stand-in for Jev, for trying the mod offline. Serves Command Code's POST
 // /provider/v1/systemone and answers with fixed rules instead of a model: nudge 86% unless the reply
 // says the work is done, waiting 92% when the reply ends with a question, progress 90% when
-// tools ran since the last nudge. Every request is appended to jev-log.jsonl so you can see
+// tools ran or the reply changed since the last nudge. Every request is appended to jev-log.jsonl so you can see
 // exactly what the mod sent.
 //
 //   node scripts/fake-jev.mjs
@@ -15,7 +15,8 @@ const judge = state => {
 	const finished = /\b(all done|everything is done|all (three|five|the) (files|steps) are done|nothing (else|more) to do)\b/i.test(text);
 	const nudge = finished ? 0.08 : 0.86;
 	const last = state.previous_nudges?.at(-1);
-	const progress = last ? (last.tool_calls_after > 0 ? 0.9 : 0.1) : undefined;
+	const moved = last && (last.tool_calls_after > 0 || last.assistant_text_at_nudge !== text);
+	const progress = last ? (moved ? 0.9 : 0.1) : undefined;
 	return {nudge, waiting, progress};
 };
 
