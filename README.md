@@ -1,5 +1,7 @@
 # cmd-mod-jev-nudge
 
+[![Watch the demo](https://raw.githubusercontent.com/CommandCodeAI/cmd-mod-jev-nudge/main/.github/image.png)](https://github.com/CommandCodeAI/cmd-mod-jev-nudge/raw/main/.github/demo.mp4)
+
 ▶ [Watch the demo](https://github.com/CommandCodeAI/cmd-mod-jev-nudge/raw/main/.github/demo.mp4)
 
 Agents stop too early. They do one step, say "next I'll do X", and hand the prompt back.
