@@ -58,9 +58,7 @@ export async function askJev(params: AskJevParams): Promise<AskJevResult> {
 				`jev ${response.status}${text ? `: ${text.slice(0, 200)}` : ''}`,
 			);
 		}
-		const parsed = jevResponseSchema.safeParse(
-			await response.json(),
-		);
+		const parsed = jevResponseSchema.safeParse(await response.json());
 		if (!parsed.success) {
 			throw new Error(
 				`jev returned an unexpected shape: ${parsed.error.message}`,
