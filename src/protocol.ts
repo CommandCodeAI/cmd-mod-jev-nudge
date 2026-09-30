@@ -7,8 +7,8 @@
 // probabilities instead of generating text, so the "should the agent keep going?" judgment
 // comes back as numbers this file can threshold, with no prose to parse.
 
-import type {AgentMessage} from './types.js';
 import {z} from 'zod';
+import type {AgentMessage} from './types.js';
 
 export const JEV_NUDGE_MOD_NAME = 'jev-nudge';
 
@@ -244,7 +244,9 @@ export interface NudgeAnswers {
 
 // System One returns `{model, answers, usage}` with each yes/no answered as `{type: 'noul',
 // noul}`; the schema hands back plain numbers so nothing downstream sees the wire shape.
-const probability = z.object({noul: z.number()}).transform(answer => answer.noul);
+const probability = z
+	.object({noul: z.number()})
+	.transform(answer => answer.noul);
 
 export const jevResponseSchema = z.object({
 	model: z.string().optional(),

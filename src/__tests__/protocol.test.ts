@@ -1,21 +1,21 @@
 // jev-nudge protocol tests — the pure half: key resolution, the state Jev sees, the
 // questions asked, and how probabilities become a stop-hook decision.
 
-import type {AgentMessage} from '../types.js';
 import {describe, expect, it} from 'vitest';
 import {
 	buildNudgeState,
+	COMMAND_CODE_BASE_URL,
 	DEFAULT_MAX_NUDGES,
 	DEFAULT_THRESHOLD,
 	decideNudge,
-	COMMAND_CODE_BASE_URL,
+	JEV_MODEL,
 	jevResponseSchema,
 	nudgeQuestions,
 	parseMaxNudges,
 	parseThreshold,
-	JEV_MODEL,
 	resolveJevConfig,
 } from '../protocol.js';
+import type {AgentMessage} from '../types.js';
 
 describe('resolveJevConfig', () => {
 	it('is dormant without a key', () => {
@@ -37,8 +37,10 @@ describe('resolveJevConfig', () => {
 			model: JEV_MODEL,
 		});
 		expect(
-			resolveJevConfig({env: {COMMAND_CODE_API_KEY: 'cli'}, storedKey: 'stored'})
-				?.apiKey,
+			resolveJevConfig({
+				env: {COMMAND_CODE_API_KEY: 'cli'},
+				storedKey: 'stored',
+			})?.apiKey,
 		).toBe('cli');
 		expect(resolveJevConfig({env: {}, storedKey: 'stored'})?.apiKey).toBe(
 			'stored',
@@ -132,19 +134,17 @@ describe('buildNudgeState', () => {
 
 describe('nudgeQuestions', () => {
 	it('asks the progress guard only once a nudge already happened', () => {
+		expect(Object.keys(nudgeQuestions({hasPreviousNudge: false}))).toEqual([
+			'nudge',
+			'waiting',
+		]);
+		expect(Object.keys(nudgeQuestions({hasPreviousNudge: true}))).toEqual([
+			'nudge',
+			'waiting',
+			'progress',
+		]);
 		expect(
-			Object.keys(
-				nudgeQuestions({hasPreviousNudge: false}),
-			),
-		).toEqual(['nudge', 'waiting']);
-		expect(
-			Object.keys(
-				nudgeQuestions({hasPreviousNudge: true}),
-			),
-		).toEqual(['nudge', 'waiting', 'progress']);
-		expect(
-			nudgeQuestions({hasPreviousNudge: false}).nudge
-				.instructions,
+			nudgeQuestions({hasPreviousNudge: false}).nudge.instructions,
 		).toContain('gentle nudge');
 	});
 

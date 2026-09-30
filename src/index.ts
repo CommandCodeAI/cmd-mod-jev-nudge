@@ -21,21 +21,21 @@
 import {readFileSync} from 'node:fs';
 import {homedir} from 'node:os';
 import {join} from 'node:path';
-import type {ModApi} from './types.js';
 import {askJev, type JevFetch} from './client.js';
 import {
 	buildNudgeState,
+	CMD_KEY_ENV,
 	DEFAULT_THRESHOLD,
 	decideNudge,
 	JEV_NUDGE_MOD_NAME,
 	NUDGE_REASON,
 	nudgeQuestions,
+	type PreviousNudge,
 	parseMaxNudges,
 	parseThreshold,
-	type PreviousNudge,
 	resolveJevConfig,
-	CMD_KEY_ENV,
 } from './protocol.js';
+import type {ModApi} from './types.js';
 
 // A stop decision is on the critical path between "model finished" and "prompt comes back";
 // a gut-check model should answer well inside this, and past it the run just stops.
@@ -77,13 +77,11 @@ export function createJevNudgeMod(
 		});
 		cmd.addFlag('jev-nudge-base-url', {
 			type: 'string',
-			description:
-				'API root for Jev (default: https://api.commandcode.ai)',
+			description: 'API root for Jev (default: https://api.commandcode.ai)',
 		});
 		cmd.addFlag('jev-nudge-model', {
 			type: 'string',
-			description:
-				'Model id sent to the endpoint (default: typesafe/jev)',
+			description: 'Model id sent to the endpoint (default: typesafe/jev)',
 		});
 
 		cmd.addFlag('jev-nudge-verbose', {
@@ -164,7 +162,8 @@ export function createJevNudgeMod(
 				} catch (error) {
 					// Best-effort: the stop decision must never depend on a network call succeeding,
 					// but a failing call is said out loud so "no nudge" is never a mystery.
-					const message = error instanceof Error ? error.message : String(error);
+					const message =
+						error instanceof Error ? error.message : String(error);
 					dlog(`[${JEV_NUDGE_MOD_NAME}] ${message}`);
 					cmd.ui.notify(
 						`${JEV_NUDGE_MOD_NAME}: Jev call failed (${message}), letting the run stop`,
@@ -185,7 +184,11 @@ export function createJevNudgeMod(
 				run = {
 					nudges: [
 						...previousNudges,
-						{turnNumber, toolCallsAfter: 0, assistantTextAtNudge: lastAssistantText},
+						{
+							turnNumber,
+							toolCallsAfter: 0,
+							assistantTextAtNudge: lastAssistantText,
+						},
 					],
 					toolCallsSinceNudge: 0,
 				};

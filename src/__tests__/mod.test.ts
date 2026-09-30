@@ -1,16 +1,16 @@
 // jev-nudge mod tests — the wiring: dormant without a key, the request it sends, the
 // continue it returns, the per-run bookkeeping, and that Jev failures never change a stop.
 
+import {describe, expect, it} from 'vitest';
+import type {JevFetch} from '../client.js';
+import {createJevNudgeMod} from '../index.js';
+import {NUDGE_REASON, SYSTEM_ONE_PATH} from '../protocol.js';
 import type {
 	AgentState,
 	ModApi,
 	ModFlagDefinition,
 	ModHooks,
 } from '../types.js';
-import {describe, expect, it} from 'vitest';
-import type {JevFetch} from '../client.js';
-import {createJevNudgeMod} from '../index.js';
-import {NUDGE_REASON, SYSTEM_ONE_PATH} from '../protocol.js';
 
 interface FakeHost {
 	readonly cmd: ModApi;
@@ -123,9 +123,11 @@ async function stop(
 describe('jev-nudge mod', () => {
 	it('registers only its flags without a key, and says so', () => {
 		const host = fakeCmd();
-		createJevNudgeMod({env: {}, storedKey: noStoredKey, fetch: fakeFetch(() => answers(1)).fetch})(
-			host.cmd,
-		);
+		createJevNudgeMod({
+			env: {},
+			storedKey: noStoredKey,
+			fetch: fakeFetch(() => answers(1)).fetch,
+		})(host.cmd);
 		expect([...host.flags.keys()]).toEqual([
 			'jev-nudge-threshold',
 			'jev-nudge-max',
@@ -223,8 +225,11 @@ describe('jev-nudge mod', () => {
 	it('only judges natural end_turn stops', async () => {
 		const host = fakeCmd();
 		const {fetch, captured} = fakeFetch(() => answers(1));
-		createJevNudgeMod({env: {CMD_API_KEY: 'ck'},
-			storedKey: noStoredKey, fetch})(host.cmd);
+		createJevNudgeMod({
+			env: {CMD_API_KEY: 'ck'},
+			storedKey: noStoredKey,
+			fetch,
+		})(host.cmd);
 		expect(await stop(host, {stopReason: 'max_tokens'})).toBeUndefined();
 		expect(captured.requests).toEqual([]);
 	});
@@ -234,7 +239,7 @@ describe('jev-nudge mod', () => {
 			const host = fakeCmd();
 			createJevNudgeMod({
 				env: {CMD_API_KEY: 'ck'},
-			storedKey: noStoredKey,
+				storedKey: noStoredKey,
 				fetch: fakeFetch(() => failure).fetch,
 			})(host.cmd);
 			expect(await stop(host)).toBeUndefined();
@@ -247,8 +252,11 @@ describe('jev-nudge mod', () => {
 		const host = fakeCmd();
 		host.flagValues.set('jev-nudge-max', '2');
 		const {fetch, captured} = fakeFetch(() => answers(0.9, 0.1, 0.9));
-		createJevNudgeMod({env: {CMD_API_KEY: 'ck'},
-			storedKey: noStoredKey, fetch})(host.cmd);
+		createJevNudgeMod({
+			env: {CMD_API_KEY: 'ck'},
+			storedKey: noStoredKey,
+			fetch,
+		})(host.cmd);
 		const hooks = host.hooks[0];
 		if (!hooks?.afterToolCall || !hooks.onTurnStart)
 			throw new Error('hooks missing');
@@ -309,7 +317,11 @@ describe('jev-nudge mod', () => {
 		host.flagValues.set('jev-nudge-model', 'jev-2');
 		host.flagValues.set('jev-nudge-threshold', '0.95');
 		const {fetch, captured} = fakeFetch(() => answers(0.9));
-		createJevNudgeMod({env: {CMD_API_KEY: 'ck'}, storedKey: noStoredKey, fetch})(host.cmd);
+		createJevNudgeMod({
+			env: {CMD_API_KEY: 'ck'},
+			storedKey: noStoredKey,
+			fetch,
+		})(host.cmd);
 
 		expect(await stop(host)).toBeUndefined();
 		expect(captured.requests[0]?.url).toBe(
